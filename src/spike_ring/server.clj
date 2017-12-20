@@ -5,4 +5,6 @@
   {:status 200
    :body   "Hello world!"})
 
-;(web/run app)
+(web/run app)
+
+(web/stop)
