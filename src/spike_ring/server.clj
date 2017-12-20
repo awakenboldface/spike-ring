@@ -7,6 +7,8 @@
    :body   "Hello world!"})
 
 ;(web/run (wrap-defaults app api-defaults))
-(web/run app {:host "0.0.0.0"})
+(def start
+  (partial web/run app {:host "0.0.0.0"}))
 
-(web/stop)
+(def stop
+  (partial web/stop))
