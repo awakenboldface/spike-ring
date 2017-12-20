@@ -1,6 +1,7 @@
 (ns spike-ring.server
   (:require [immutant.web :as web]
-            [ring.middleware.defaults :refer :all]))
+            [ring.middleware.defaults :refer :all]
+            [mount.core :refer [defstate]]))
 
 (defn app [request]
   {:status 200
@@ -12,3 +13,7 @@
 
 (def stop
   (partial web/stop))
+
+(defstate server
+          :start (start)
+          :stop (stop))

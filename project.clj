@@ -6,7 +6,8 @@
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [ring "1.6.3"]
                  [ring/ring-defaults "0.3.1"]
-                 [org.immutant/web "2.1.9"]]
+                 [org.immutant/web "2.1.9"]
+                 [mount "0.1.11"]]
   :plugins [[lein-ancient "0.6.10"]
             [lein-auto "0.1.3"]]
   :main ^:skip-aot spike-ring.core
