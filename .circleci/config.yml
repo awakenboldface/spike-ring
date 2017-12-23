@@ -76,7 +76,7 @@ jobs:
 
       - run: |
           docker run -d --name spike-ring gcr.io/sanguine-frame-189801/spike-ring
-          docker exec spike-ring curl --retry 10 http://localhost:8080
+          docker exec spike-ring wget --retry-connrefused -T 10 http://localhost:8080
 
 workflows:
   version: 2
