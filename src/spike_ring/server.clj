@@ -7,7 +7,7 @@
 (defn app
   [request]
   {:status 200
-   :body   [{:hi "Hello hey!"}]})
+   :body   [{:hello "world!"}]})
 
 ;(web/run (wrap-defaults app api-defaults))
 (def start
