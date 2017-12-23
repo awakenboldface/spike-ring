@@ -42,3 +42,12 @@ jobs:
       - run: lein test
 
       - run: lein uberjar
+
+      - setup_remote_docker:   # (2)
+          docker_layer_caching: true # (3)
+
+      - run:
+          name: Run Docker
+          command: |
+            docker run hello-world
+            echo "hello world"
