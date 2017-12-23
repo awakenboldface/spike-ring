@@ -1,0 +1,18 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: helloweb
+  labels:
+    app: hello
+spec:
+  template:
+    metadata:
+      labels:
+        app: hello
+        tier: web
+    spec:
+      containers:
+      - name: hello-app
+        image: gcr.io/sanguine-frame-189801/spike-ring
+        ports:
+        - containerPort: 8080
