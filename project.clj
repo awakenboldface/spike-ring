@@ -12,5 +12,6 @@
   :plugins [[lein-ancient "0.6.10"]
             [lein-auto "0.1.3"]]
   :main ^:skip-aot spike-ring.core
+  :uberjar-name "spike-ring.jar"
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})

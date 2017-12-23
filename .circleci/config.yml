@@ -47,6 +47,16 @@ jobs:
           docker_layer_caching: true # (3)
 
       - run:
+          name: Copy jar
+          command: |
+            cp target/uberjar/spike-ring.jar docker/spike-ring/spike-ring.jar
+
+      - run:
+          name: Push image
+          command: |
+            docker build -t gcr.io/sanguine-frame-189801/spike-ring docker/spike-ring
+
+      - run:
           name: Run Docker
           command: |
             docker run hello-world
