@@ -71,8 +71,10 @@ jobs:
       - run:
           name: Push image
           command: |
-            docker build -t gcr.io/sanguine-frame-189801/spike-ring docker/spike-ring
-            gcloud docker -- push gcr.io/sanguine-frame-189801/spike-ring
+            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
+              docker build -t gcr.io/sanguine-frame-189801/spike-ring:${CIRCLE_TAG} docker/spike-ring
+              gcloud docker -- push gcr.io/sanguine-frame-189801/spike-ring:${CIRCLE_TAG}
+            fi
 
       - run:
           name: Run Docker
