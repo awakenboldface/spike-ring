@@ -21,8 +21,25 @@ jobs:
       # Customize the JVM maximum heap limit
       JVM_OPTS: -Xmx3200m
 
+    auth:
+    #Put the contents of keyfile.json into an environment variable for the build called GCR_CREDS, which is then passed in.
+      username: _json_key
+      password: $GOOGLE_AUTH
+
     steps:
       - checkout
+
+      - run:
+          name: Dump Google Cloud Credentials to file
+          command: echo ${GOOGLE_AUTH} > ${HOME}/gcp-key.json
+
+      - run:
+          name: Configure gcloud
+          command: |
+            gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+            gcloud --quiet container clusters get-credentials ${GOOGLE_CLUSTER_NAME}
 
       # Download and cache dependencies
       - restore_cache:
