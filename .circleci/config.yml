@@ -55,6 +55,7 @@ jobs:
           name: Push image
           command: |
             docker build -t gcr.io/sanguine-frame-189801/spike-ring docker/spike-ring
+            gcloud docker -- push gcr.io/sanguine-frame-189801/spike-ring
 
       - run:
           name: Run Docker
