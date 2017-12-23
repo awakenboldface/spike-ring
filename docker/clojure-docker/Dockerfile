@@ -2,6 +2,8 @@ FROM clojure:lein-2.8.1-alpine
 
 WORKDIR /
 
+RUN apk --no-cache add wget
+
 ENV CLOUD_SDK_VERSION 183.0.0
 
 ENV PATH /google-cloud-sdk/bin:$PATH
