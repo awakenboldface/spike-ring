@@ -71,13 +71,22 @@ jobs:
       - run:
           name: Push image
           command: |
-            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
-              docker build -t gcr.io/sanguine-frame-189801/spike-ring:${CIRCLE_SHA1} docker/spike-ring
-              gcloud docker -- push gcr.io/sanguine-frame-189801/spike-ring:${CIRCLE_SHA1}
-            fi
+            docker build -t gcr.io/sanguine-frame-189801/spike-ring:${CIRCLE_TAG} docker/spike-ring
+            gcloud docker -- push gcr.io/sanguine-frame-189801/spike-ring:${CIRCLE_TAG}
 
       - run:
           name: Run Docker
           command: |
             docker run hello-world
             echo "hello world"
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: develop
+            tags:
+              only: /.+/
