@@ -13,6 +13,6 @@ spec:
     spec:
       containers:
       - name: hello-app
-        image: slander/spike-ring:v0.1.7
+        image: slander/spike-ring:v0.1.8
         ports:
         - containerPort: 8080
