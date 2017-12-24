@@ -13,6 +13,6 @@ spec:
     spec:
       containers:
       - name: hello-app
-        image: gcr.io/sanguine-frame-189801/spike-ring:v0.1.2
+        image: slander/spike-ring:v0.1.7
         ports:
         - containerPort: 8080
