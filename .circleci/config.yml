@@ -85,6 +85,6 @@ workflows:
       - build:
           filters:
             branches:
-              only: develop
+              ignore: /.+/
             tags:
               only: /.+/
