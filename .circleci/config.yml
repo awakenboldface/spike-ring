@@ -42,11 +42,22 @@ jobs:
             gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
             gcloud --quiet container clusters get-credentials ${GOOGLE_CLUSTER_NAME}
 
+      - restore_cache:
+          keys:
+          - model-$MODEL_VERSION
+
       - run:
           name: Download model
           command: |
-            mkdir python/model
-            gsutil cp -r gs://spike-ring/$MODEL_VERSION/ python/model
+            if [ ! -d "python/model" ]; then
+              mkdir python/model
+              gsutil cp -r gs://spike-ring/$MODEL_VERSION/ python/model
+            fi
+
+      - save_cache:
+          paths:
+            - python/model
+          key: model-$MODEL_VERSION
 
       # Download and cache dependencies
       - restore_cache:
