@@ -22,6 +22,14 @@ ENV PATH /opt/conda/bin:$PATH
 
 COPY target/uberjar/spike-ring.jar /code/spike-ring.jar
 
+ENV PYTHONPATH /code/python
+
+COPY python /code/python
+
+RUN cd /code/python && conda env create
+RUN apt-get install -y gcc++
+RUN /bin/bash -c "cd /code/python && source activate spike-ring && python -m spacy download en"
+
 EXPOSE 8080
 
-CMD ["java", "-jar", "/code/spike-ring.jar"]
+CMD ["/bin/bash", "-c", "cd /code/python && source activate spike-ring && python spike_ring/server.py && cd /code && java -jar spike-ring.jar"]
