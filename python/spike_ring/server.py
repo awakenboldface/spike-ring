@@ -100,7 +100,7 @@ runs_path = path.join(resources_path, "runs")
 
 
 def get_hyperparameter_path():
-    return "hyperparameter.json"
+    return "model/hyperparameter.json"
     # return path.join(runs_path, timestamp, "hyperparameter.json")
 
 
@@ -250,7 +250,7 @@ def make_add_scalars(m):
 
 
 def get_checkpoint_path(s):
-    return "best.pth.tar"
+    return "model/best.pth.tar"
     # return os.path.join(runs_path, timestamp, "checkpoints", s + ".pth.tar")
 
 

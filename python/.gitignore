@@ -141,5 +141,4 @@ fabric.properties
 
 ### spike_generate
 .vector_cache
-best.pth.tar
-hyperparameter.json
+model
