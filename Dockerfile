@@ -33,4 +33,6 @@ RUN /bin/bash -c "cd /code/python && source activate spike-ring && python -m spa
 
 EXPOSE 8080
 
-CMD ["/bin/bash", "-c", "cd /code/python && source activate spike-ring && python spike_ring/server.py && cd /code && java -jar spike-ring.jar"]
+COPY script/docker.sh /code/docker.sh
+
+CMD /code/docker.sh
