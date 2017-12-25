@@ -100,7 +100,8 @@ runs_path = path.join(resources_path, "runs")
 
 
 def get_hyperparameter_path():
-    return path.join(runs_path, timestamp, "hyperparameter.json")
+    return "hyperparameter.json"
+    # return path.join(runs_path, timestamp, "hyperparameter.json")
 
 
 get_hyperparameter = compose(json.loads,
@@ -249,7 +250,8 @@ def make_add_scalars(m):
 
 
 def get_checkpoint_path(s):
-    return os.path.join(runs_path, timestamp, "checkpoints", s + ".pth.tar")
+    return "best.pth.tar"
+    # return os.path.join(runs_path, timestamp, "checkpoints", s + ".pth.tar")
 
 
 def log_tensorboard(m):
