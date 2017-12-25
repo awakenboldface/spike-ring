@@ -81,10 +81,10 @@ jobs:
       - setup_remote_docker:   # (2)
           docker_layer_caching: true # (3)
 
-      - run:
-          name: Copy jar
-          command: |
-            cp target/uberjar/spike-ring.jar docker/spike-ring/spike-ring.jar
+#      - run:
+#          name: Copy jar
+#          command: |
+#            cp target/uberjar/spike-ring.jar docker/spike-ring/spike-ring.jar
 
 #      - run:
 #          name: Push image
@@ -96,11 +96,11 @@ jobs:
           name: Push image
           command: |
             if [ -z "$CIRCLE_TAG" ]; then
-              docker build -t slander/spike-ring docker/spike-ring
+              docker build -t slander/spike-ring .
               docker run -d --name spike-ring slander/spike-ring
               docker exec spike-ring wget --retry-connrefused -T 10 http://localhost:8080
             else
-              docker build -t slander/spike-ring:$CIRCLE_TAG docker/spike-ring
+              docker build -t slander/spike-ring:$CIRCLE_TAG .
               docker run -d --name spike-ring slander/spike-ring:$CIRCLE_TAG
               docker exec spike-ring wget --retry-connrefused -T 10 http://localhost:8080
               docker login -u $DOCKER_USER -p $DOCKER_PASS

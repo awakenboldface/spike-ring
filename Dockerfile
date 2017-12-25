@@ -20,7 +20,7 @@ RUN apt-get install -y curl grep sed dpkg && \
 
 ENV PATH /opt/conda/bin:$PATH
 
-COPY spike-ring.jar /code/spike-ring.jar
+COPY target/uberjar/spike-ring.jar /code/spike-ring.jar
 
 EXPOSE 8080
 
