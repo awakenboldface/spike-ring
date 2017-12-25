@@ -1,5 +1,7 @@
 FROM java:8
 
+RUN apt-get update && apt-get install -y build-essential
+
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 
 RUN apt-get update --fix-missing && apt-get install -y wget bzip2 ca-certificates \
@@ -27,7 +29,6 @@ ENV PYTHONPATH /code/python
 COPY python /code/python
 
 RUN cd /code/python && conda env create
-RUN apt-get install -y gcc++
 RUN /bin/bash -c "cd /code/python && source activate spike-ring && python -m spacy download en"
 
 EXPOSE 8080
