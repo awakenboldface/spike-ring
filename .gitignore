@@ -57,3 +57,4 @@ fabric.properties
 
 ### spike-ring
 resources/runs
+docker/spike-ring/environment.yml
