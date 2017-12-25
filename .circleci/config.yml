@@ -77,11 +77,17 @@ jobs:
       - run:
           name: Push image
           command: |
-            docker build -t slander/spike-ring:$CIRCLE_TAG docker/spike-ring
-            docker run -d --name spike-ring slander/spike-ring:$CIRCLE_TAG
-            docker exec spike-ring wget --retry-connrefused -T 10 http://localhost:8080
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push slander/spike-ring:$CIRCLE_TAG
+            if [ -z "$CIRCLE_TAG" ]; then
+              docker build -t slander/spike-ring docker/spike-ring
+              docker run -d --name spike-ring slander/spike-ring
+              docker exec spike-ring wget --retry-connrefused -T 10 http://localhost:8080
+            else
+              docker build -t slander/spike-ring:$CIRCLE_TAG docker/spike-ring
+              docker run -d --name spike-ring slander/spike-ring:$CIRCLE_TAG
+              docker exec spike-ring wget --retry-connrefused -T 10 http://localhost:8080
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push slander/spike-ring:$CIRCLE_TAG
+            fi
 
 workflows:
   version: 2
@@ -89,7 +95,5 @@ workflows:
     jobs:
       - build:
           filters:
-            branches:
-              ignore: /.+/
             tags:
               only: /.+/
