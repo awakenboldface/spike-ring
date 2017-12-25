@@ -20,6 +20,7 @@ jobs:
       LEIN_ROOT: "true"
       # Customize the JVM maximum heap limit
       JVM_OPTS: -Xmx3200m
+      MODEL_VERSION: 0.1.0
 
     auth:
     #Put the contents of keyfile.json into an environment variable for the build called GCR_CREDS, which is then passed in.
@@ -45,7 +46,7 @@ jobs:
           name: Download model
           command: |
             mkdir python/model
-            gsutil cp -r gs://spike-ring/0.1.0/ python/model
+            gsutil cp -r gs://spike-ring/$MODEL_VERSION/ python/model
 
       # Download and cache dependencies
       - restore_cache:
