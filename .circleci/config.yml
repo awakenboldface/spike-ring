@@ -4,7 +4,7 @@
 #
 version: 2
 jobs:
-  build:
+  clojure:
     docker:
       # specify the version you desire here
       - image: slander/clojure-docker
@@ -20,6 +20,60 @@ jobs:
       LEIN_ROOT: "true"
       # Customize the JVM maximum heap limit
       JVM_OPTS: -Xmx3200m
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "project.clj" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run: lein deps
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "project.clj" }}
+
+      # run tests!
+      - run: lein test
+
+      - run: lein uberjar
+
+      - setup_remote_docker:   # (2)
+          docker_layer_caching: true # (3)
+
+      - run:
+          name: Push image
+          command: |
+            if [ -z "$CIRCLE_TAG" ]; then
+              docker build -t slander/spike-ring .
+              docker run -d --name spike-ring slander/spike-ring
+              docker exec spike-ring wget --header='Content-type: application/edn' --post-data='{:text "Hello world"}' --retry-connrefused -T 10 http://localhost:8080
+            else
+              docker build -t slander/spike-ring:$CIRCLE_TAG .
+              docker run -d --name spike-ring slander/spike-ring:$CIRCLE_TAG
+              docker exec spike-ring wget --header='Content-type: application/edn' --post-data='{:text "Hello world"}' --retry-connrefused -T 10 http://localhost:8080
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push slander/spike-ring:$CIRCLE_TAG
+            fi
+
+  python:
+    docker:
+      # specify the version you desire here
+      - image: slander/clojure-docker
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/postgres:9.4
+
+    working_directory: ~/repo
+
+    environment:
       MODEL_VERSION: 0.1.0
 
     auth:
@@ -59,59 +113,18 @@ jobs:
             - python/model
           key: model-$MODEL_VERSION
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "project.clj" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
-      - run: lein deps
-
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: v1-dependencies-{{ checksum "project.clj" }}
-
-      # run tests!
-      - run: lein test
-
-      - run: lein uberjar
-
-      - setup_remote_docker:   # (2)
-          docker_layer_caching: true # (3)
-
-#      - run:
-#          name: Copy jar
-#          command: |
-#            cp target/uberjar/spike-ring.jar docker/spike-ring/spike-ring.jar
-
-#      - run:
-#          name: Push image
-#          command: |
-#            docker build -t gcr.io/sanguine-frame-189801/spike-ring:${CIRCLE_TAG} docker/spike-ring
-#            gcloud docker -- push gcr.io/sanguine-frame-189801/spike-ring:${CIRCLE_TAG}
-
-      - run:
-          name: Push image
-          command: |
-            if [ -z "$CIRCLE_TAG" ]; then
-              docker build -t slander/spike-ring .
-              docker run -d --name spike-ring slander/spike-ring
-              docker exec spike-ring wget --header='Content-type: application/edn' --post-data='{:text "Hello world"}' --retry-connrefused -T 10 http://localhost:8080
-            else
-              docker build -t slander/spike-ring:$CIRCLE_TAG .
-              docker run -d --name spike-ring slander/spike-ring:$CIRCLE_TAG
-              docker exec spike-ring wget --header='Content-type: application/edn' --post-data='{:text "Hello world"}' --retry-connrefused -T 10 http://localhost:8080
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push slander/spike-ring:$CIRCLE_TAG
-            fi
 
 workflows:
   version: 2
-  build:
+  clojure:
     jobs:
-      - build:
+      - clojure:
+          filters:
+            tags:
+              only: /.+/
+  python:
+    jobs:
+      - python:
           filters:
             tags:
               only: /.+/

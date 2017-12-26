@@ -1,7 +1,2 @@
 **
 !target/uberjar/spike-ring.jar
-!python/spike_ring
-!python/environment.yml
-!python/.vector_cache/glove.6B.50d.txt.pt
-!python/model
-!script/docker.sh
