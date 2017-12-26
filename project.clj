@@ -7,6 +7,7 @@
                  [ring "1.6.3"]
                  [ring/ring-defaults "0.3.1"]
                  [ring/ring-json "0.4.0"]
+                 [fogus/ring-edn "0.3.0"]
                  [org.immutant/web "2.1.9"]
                  [mount "0.1.11"]]
   :plugins [[lein-ancient "0.6.10"]
