@@ -123,9 +123,11 @@ jobs:
             if [ -z "$CIRCLE_TAG" ]; then
               docker build -t slander/spike-python .
               docker run -d --name spike-python slander/spike-python
+              wget --header='Content-type: application/json' --post-data='{"action": "parse", "input": "Hello world"}' --retry-connrefused -T 10 http://localhost:5000
             else
               docker build -t slander/spike-python:$CIRCLE_TAG .
               docker run -d --name spike-python slander/spike-python:$CIRCLE_TAG
+              wget --header='Content-type: application/json' --post-data='{"action": "parse", "input": "Hello world"}' --retry-connrefused -T 10 http://localhost:5000
             fi
 
 
