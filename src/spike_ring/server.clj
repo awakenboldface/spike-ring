@@ -197,6 +197,9 @@
 
 (defn app
   [request]
+  (println request)
+  (println (:text (:params request)))
+  (println (parse (:text (:params request))))
   ;(println (parse (:text (:params request))))
   {:status 200
    :body   (pr-str (parse (:text (:params request))))})
