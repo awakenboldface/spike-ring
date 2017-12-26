@@ -113,6 +113,21 @@ jobs:
             - python/model
           key: model-$MODEL_VERSION
 
+      - setup_remote_docker:   # (2)
+          docker_layer_caching: true # (3)
+
+      - run:
+          name: Push image
+          command: |
+            cd python
+            if [ -z "$CIRCLE_TAG" ]; then
+              docker build -t slander/spike-python .
+              docker run -d --name spike-python slander/spike-python
+            else
+              docker build -t slander/spike-python:$CIRCLE_TAG .
+              docker run -d --name spike-python slander/spike-python:$CIRCLE_TAG
+            fi
+
 
 workflows:
   version: 2

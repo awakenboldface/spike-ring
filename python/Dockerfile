@@ -2,8 +2,8 @@ FROM continuumio/anaconda3
 
 ENV PYTHONPATH /code
 
-COPY python /code
+COPY . /code
 
-RUN cd /code && conda env create && /bin/bash -c "cd /code/python && source activate spike-ring && python -m spacy download en"
+RUN cd /code && conda env create && /bin/bash -c "cd /code && source activate spike-ring && python -m spacy download en"
 
-CMD "source activate spike-ring && python /code/server.py"
+CMD "cd /code && source activate spike-ring && python server.py"
