@@ -75,7 +75,7 @@ jobs:
     working_directory: ~/repo
 
     environment:
-      MODEL_VERSION: 0.1.0
+      MODEL_VERSION: 0.1.1
 
     auth:
     #Put the contents of keyfile.json into an environment variable for the build called GCR_CREDS, which is then passed in.
