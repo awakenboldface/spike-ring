@@ -52,11 +52,11 @@ jobs:
             if [ -z "$CIRCLE_TAG" ]; then
               docker build -t slander/spike-ring .
               docker run -d --name spike-ring slander/spike-ring
-              docker exec spike-ring wget --header='Content-type: application/edn' --post-data='{:text "Hello world"}' --retry-connrefused -T 10 http://localhost:8080
+              # docker exec spike-ring wget --header='Content-type: application/edn' --post-data='{:text "Hello world"}' --retry-connrefused -T 10 http://localhost:8080
             else
               docker build -t slander/spike-ring:$CIRCLE_TAG .
               docker run -d --name spike-ring slander/spike-ring:$CIRCLE_TAG
-              docker exec spike-ring wget --header='Content-type: application/edn' --post-data='{:text "Hello world"}' --retry-connrefused -T 10 http://localhost:8080
+              # docker exec spike-ring wget --header='Content-type: application/edn' --post-data='{:text "Hello world"}' --retry-connrefused -T 10 http://localhost:8080
               docker login -u $DOCKER_USER -p $DOCKER_PASS
               docker push slander/spike-ring:$CIRCLE_TAG
             fi

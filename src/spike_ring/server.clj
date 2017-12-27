@@ -202,8 +202,8 @@
   ;(println (parse (:text (:params request))))
   ;(println (parse (:text (:params request))))
   {:status 200
-   :body   (:text (:params request))
-   ;:body   (pr-str (parse (:text (:params request))))
+   ;:body   (:text (:params request))
+   :body   (pr-str (parse (:text (:params request))))
    })
 
 (def start
