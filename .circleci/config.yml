@@ -129,6 +129,8 @@ jobs:
               docker build -t slander/spike-python:$CIRCLE_TAG .
               docker run -d --name spike-python slander/spike-python:$CIRCLE_TAG
               docker exec spike-python wget --header='Content-type: application/json' --post-data='{"action": "parse", "input": "Hello world"}' --retry-connrefused -T 10 http://localhost:5000
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push slander/spike-python:$CIRCLE_TAG
             fi
 
 
