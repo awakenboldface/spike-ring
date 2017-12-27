@@ -1,4 +1,57 @@
-FROM clojure:lein-2.8.1-alpine
+FROM node:8-alpine
+
+# Default to UTF-8 file.encoding
+ENV LANG C.UTF-8
+
+# add a simple script that can auto-detect the appropriate JAVA_HOME value
+# based on whether the JDK or only the JRE is installed
+RUN { \
+		echo '#!/bin/sh'; \
+		echo 'set -e'; \
+		echo; \
+		echo 'dirname "$(dirname "$(readlink -f "$(which javac || which java)")")"'; \
+	} > /usr/local/bin/docker-java-home \
+	&& chmod +x /usr/local/bin/docker-java-home
+ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
+ENV PATH $PATH:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin
+
+ENV JAVA_VERSION 8u131
+ENV JAVA_ALPINE_VERSION 8.131.11-r2
+
+RUN set -x \
+	&& apk add --no-cache \
+		openjdk8="$JAVA_ALPINE_VERSION" \
+	&& [ "$JAVA_HOME" = "$(docker-java-home)" ]
+
+ENV LEIN_VERSION=2.8.1
+ENV LEIN_INSTALL=/usr/local/bin/
+
+WORKDIR /tmp
+
+RUN apk add --update tar gnupg bash openssl && rm -rf /var/cache/apk/*
+
+# Download the whole repo as an archive
+RUN mkdir -p $LEIN_INSTALL \
+  && wget -q https://raw.githubusercontent.com/technomancy/leiningen/$LEIN_VERSION/bin/lein-pkg \
+  && echo "Comparing lein-pkg checksum ..." \
+  && echo "019faa5f91a463bf9742c3634ee32fb3db8c47f0 *lein-pkg" | sha1sum -c - \
+  && mv lein-pkg $LEIN_INSTALL/lein \
+  && chmod 0755 $LEIN_INSTALL/lein \
+  && wget -q https://github.com/technomancy/leiningen/releases/download/$LEIN_VERSION/leiningen-$LEIN_VERSION-standalone.zip \
+  && wget -q https://github.com/technomancy/leiningen/releases/download/$LEIN_VERSION/leiningen-$LEIN_VERSION-standalone.zip.asc \
+  && gpg --keyserver pool.sks-keyservers.net --recv-key 2B72BF956E23DE5E830D50F6002AF007D1A7CC18 \
+  && echo "Verifying Jar file signature ..." \
+  && gpg --verify leiningen-$LEIN_VERSION-standalone.zip.asc \
+  && rm leiningen-$LEIN_VERSION-standalone.zip.asc \
+  && mkdir -p /usr/share/java \
+  && mv leiningen-$LEIN_VERSION-standalone.zip /usr/share/java/leiningen-$LEIN_VERSION-standalone.jar
+
+ENV PATH=$PATH:$LEIN_INSTALL
+ENV LEIN_ROOT 1
+
+# Install clojure 1.8.0 so users don't have to download it every time
+RUN echo '(defproject dummy "" :dependencies [[org.clojure/clojure "1.8.0"]])' > project.clj \
+  && lein deps && rm project.clj
 
 WORKDIR /
 
