@@ -103,11 +103,27 @@ jobs:
       - run:
           name: Copy
           command: |
-            cp -r node_modules docker/spike-clojurescript/node_modules
-            cp -r target docker/spike-clojurescript/target
+            cp -r node_modules docker/spike-clojurescript/code/node_modules
+            cp -r target docker/spike-clojurescript/code/target
 
       - setup_remote_docker:   # (2)
           docker_layer_caching: true # (3)
+
+      - run:
+          name: Push image
+          command: |
+            cd docker/spike-clojurescript
+            if [ -z "$CIRCLE_TAG" ]; then
+              docker build -t slander/spike-clojurescript .
+              docker run -d --name spike-clojurescript slander/spike-clojurescript
+              docker exec spike-clojurescript wget --header='Content-type: application/edn' --post-data='["hello" "world"]' --retry-connrefused -T 10 http://localhost:3000
+            else
+              docker build -t slander/spike-clojurescript:$CIRCLE_TAG .
+              docker run -d --name spike-clojurescript slander/spike-clojurescript:$CIRCLE_TAG
+              docker exec spike-clojurescript wget --header='Content-type: application/edn' --post-data='["hello" "world"]' --retry-connrefused -T 10 http://localhost:3000
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push slander/spike-clojurescript:$CIRCLE_TAG
+            fi
 
   python:
     docker:
