@@ -195,6 +195,18 @@
            (:whitespace_ token))
       (:text_with_ws token))))
 
+(defn generate
+  [coll]
+  (walk/prewalk parse-number
+                (:body (client/post "http://localhost:3000"
+                                    {:content-type :application/edn
+                                     :form-params  coll
+                                     :as           :json}))))
+
+(defn get-native
+  [text]
+  (generate (map :lower_ (supplement-parsed (supplement-parsed (parse text))))))
+
 (defn app
   [request]
   (println request)
