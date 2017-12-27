@@ -118,3 +118,5 @@ typings/
 ### spike-ring
 resources/runs
 docker/spike-ring/environment.yml
+docker/spike-clojurescript/code/target/index.js
+docker/spike-clojurescript/code/node_modules
