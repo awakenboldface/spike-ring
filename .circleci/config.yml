@@ -106,7 +106,7 @@ jobs:
           command: |
             if [ ! -d "python/model" ]; then
               mkdir python/model
-              gsutil cp -r gs://spike-ring/$MODEL_VERSION/ python/model
+              gsutil cp gs://spike-ring/$MODEL_VERSION/* python/model/
             fi
 
       - save_cache:
