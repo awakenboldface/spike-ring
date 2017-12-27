@@ -30,6 +30,7 @@
                                        :output-to      "target/index.js"
                                        :target         :nodejs
                                        :output-dir     "target"
+                                       :optimizations  :simple
                                        ;:install-deps   true
                                        ;:npm-deps       {:en-inflectors "1.0.12"}
                                        ;; :externs ["externs.js"]
