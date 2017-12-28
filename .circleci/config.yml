@@ -126,6 +126,7 @@ jobs:
             fi
 
   python:
+    resource_class: xlarge
     docker:
       # specify the version you desire here
       - image: slander/clojure-docker
