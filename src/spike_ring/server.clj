@@ -213,10 +213,13 @@
   (println (:text (:params request)))
   ;(println (parse (:text (:params request))))
   ;(println (parse (:text (:params request))))
-  {:status 200
-   ;:body   (:text (:params request))
-   :body   (pr-str (parse (:text (:params request))))
-   })
+  (if (:text (:params request))
+    {:status 200
+     ;:body   (:text (:params request))
+     :body   (pr-str (parse (:text (:params request))))
+     }
+    {:status 200
+     :body   "hello world"}))
 
 (def start
   (partial web/run
