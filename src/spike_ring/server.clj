@@ -217,7 +217,7 @@
   [request]
   (if (:text (:params request))
     {:status 200
-     :body   {:text (pr-str (get-native (:text (:params request))))}
+     :body   (pr-str {:text (get-native (:text (:params request)))})
      }
     {:status 200
      :body   "hello world"}))
