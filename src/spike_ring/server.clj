@@ -3,6 +3,7 @@
             [ring.middleware.defaults :refer :all]
             [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
             [ring.middleware.edn :refer :all]
+            [ring.middleware.cors :refer [wrap-cors]]
             [clj-http.client :as client]
             [clojure.walk :as walk]
             [aid.core :as aid]
@@ -225,7 +226,9 @@
 (def start
   (partial web/run
            (-> app
-               wrap-edn-params)
+               wrap-edn-params
+               (wrap-cors :access-control-allow-origin #".*"
+                          :access-control-allow-methods [:get :put :post :delete]))
            {:host "0.0.0.0"}))
 
 (def stop

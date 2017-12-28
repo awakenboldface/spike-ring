@@ -7,6 +7,7 @@
                  [ring "1.6.3"]
                  [ring/ring-defaults "0.3.1"]
                  [ring/ring-json "0.4.0"]
+                 [ring-cors "0.1.11"]
                  [fogus/ring-edn "0.3.0"]
                  [clj-http "3.7.0"]
                  [aid "0.1.1"]
