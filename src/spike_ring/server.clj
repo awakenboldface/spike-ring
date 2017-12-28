@@ -197,26 +197,27 @@
 
 (defn generate
   [coll]
-  (walk/prewalk parse-number
-                (:body (client/post "http://localhost:3000"
-                                    {:content-type :application/edn
-                                     :form-params  coll
-                                     :as           :json}))))
+  (binding [*read-eval* false]
+    (read-string (:body (client/post "http://localhost:3000"
+                                     {:content-type :application/edn
+                                      :body         (pr-str coll)})))))
+
 
 (defn get-native
   [text]
-  (generate (map :lower_ (supplement-parsed (supplement-parsed (parse text))))))
+  (str/join (map (fn [token]
+                   (str (get-article-with-whitespace token)
+                        (inflect-case token)))
+                 (map merge
+                      (merge-inferred (infer (map :lower_ (supplement-parsed (parse text))))
+                                      (supplement-parsed (parse text)))
+                      (generate (map :lower_ (supplement-parsed (parse text))))))))
 
 (defn app
   [request]
-  (println request)
-  (println (:text (:params request)))
-  ;(println (parse (:text (:params request))))
-  ;(println (parse (:text (:params request))))
   (if (:text (:params request))
     {:status 200
-     ;:body   (:text (:params request))
-     :body   (pr-str (parse (:text (:params request))))
+     :body   (pr-str (get-native (:text (:params request))))
      }
     {:status 200
      :body   "hello world"}))
