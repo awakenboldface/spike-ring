@@ -13,10 +13,14 @@ spec:
     spec:
       containers:
       - name: hello-app
-        image: slander/spike-ring:v0.1.24
+        image: slander/spike-ring:v0.1.25
         ports:
         - containerPort: 8080
       - name: spike-python
-        image: slander/spike-python:v0.1.24
+        image: slander/spike-python:v0.1.25
         ports:
         - containerPort: 5000
+      - name: spike-clojurescript
+        image: slander/spike-clojurescript:v0.1.25
+        ports:
+        - containerPort: 3000
