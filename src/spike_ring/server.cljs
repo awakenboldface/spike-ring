@@ -3,7 +3,8 @@
             [macchiato.middleware.defaults :refer [wrap-defaults api-defaults site-defaults]]
             [macchiato.util.response :as r]
             [mount.core :as mount :refer-macros [defstate]]
-            [cljs.nodejs :as nodejs]))
+            [cljs.nodejs :as nodejs]
+            [cljs.tools.reader :as reader]))
 
 (nodejs/enable-util-print!)
 
@@ -31,16 +32,18 @@
 (.extend http-shutdown)
 
 (defn home [req res raise]
-  ;(pr (map (fn [token]
-  ;           {:verb (apply get {"be" "are"} (repeat 2 (inflect-verb token)))
-  ;            :noun (pluralize token)})
-  ;         (:tokens (:params req))))
-  (-> [{:hello "great"} {:hello "great"}]
-      clj->js
-      JSON.stringify
-      r/ok
-      (r/content-type "application/json")
-      res))
+  (.on (:body req)
+       "data"
+       (fn [x]
+         (-> (map (fn [token]
+                    {:verb (apply get {"be" "are"} (repeat 2 (inflect-verb token)))
+                     :noun (pluralize token)})
+                  (reader/read-string (.toString x)))
+             pr-str
+             r/ok
+             (update :headers (partial merge {"Access-Control-Allow-Origin" "*"}))
+             (r/content-type "application/edn")
+             res))))
 
 (defonce server-atom
          (atom nil))
