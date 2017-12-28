@@ -24,7 +24,15 @@ import spacy
 
 from spike_ring.clojure import *
 
-if cuda.is_available():
+parser = argparse.ArgumentParser()
+parser.add_argument("--timestamp")
+parser.add_argument("--production")
+production = first(parser.parse_known_args()).production
+timestamp = first(parser.parse_known_args()).timestamp
+resources_path = "../resources"
+runs_path = path.join(resources_path, "runs")
+
+if cuda.is_available() or production:
     embedding = vocab.FastText()
 else:
     embedding = vocab.GloVe("6B", 50)
@@ -91,12 +99,6 @@ def if_(test, then, else_):
         return then
     return else_
 
-
-parser = argparse.ArgumentParser()
-parser.add_argument("--timestamp")
-timestamp = first(parser.parse_known_args()).timestamp
-resources_path = "../resources"
-runs_path = path.join(resources_path, "runs")
 
 
 def get_hyperparameter_path():

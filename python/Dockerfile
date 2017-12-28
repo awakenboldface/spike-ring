@@ -4,8 +4,8 @@ ENV PYTHONPATH /code
 
 COPY . /code
 
-RUN apt-get update && apt-get install -y build-essential && cd /code && conda env create && /bin/bash -c "cd /code && source activate spike-ring && python -m spacy download en && python test/test_server.py"
+RUN apt-get update && apt-get install -y build-essential && cd /code && conda env create && /bin/bash -c "cd /code && source activate spike-ring && python -m spacy download en && python test/test_server.py --production true"
 
 EXPOSE 5000
 
-CMD ["/bin/bash", "-c", "cd /code && source activate spike-ring && python spike_ring/server.py"]
+CMD ["/bin/bash", "-c", "cd /code && source activate spike-ring && python spike_ring/server.py --production true"]
