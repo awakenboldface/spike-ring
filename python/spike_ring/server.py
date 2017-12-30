@@ -408,7 +408,7 @@ def load():
     model = get_cuda(Model(get_hyperparameter()))
     optimizer = get_optimizer(model.parameters())
     if os.path.exists(get_checkpoint_path("recent")):
-        checkpoint = torch.load(get_checkpoint_path("recent"))
+        checkpoint = torch.load(get_checkpoint_path("recent"), map_location=lambda storage, loc: storage)
         model.load_state_dict(checkpoint["model"])
         optimizer.load_state_dict(checkpoint["optimizer"])
     else:
