@@ -166,37 +166,37 @@ jobs:
 #          keys:
 #          - model-$MODEL_VERSION
 
-      - run:
-          name: Download model
-          command: |
-            if [ ! -d "python/model" ]; then
-              mkdir python/model
-              gsutil cp gs://spike-ring/$MODEL_VERSION/* python/model/
-            fi
+#      - run:
+#          name: Download model
+#          command: |
+#            if [ ! -d "python/model" ]; then
+#              mkdir python/model
+#              gsutil cp gs://spike-ring/$MODEL_VERSION/* python/model/
+#            fi
 
 #      - save_cache:
 #          paths:
 #            - python/model
 #          key: model-$MODEL_VERSION
 
-      - setup_remote_docker:   # (2)
-          docker_layer_caching: true # (3)
-
-      - run:
-          name: Push image
-          command: |
-            cd python
-            if [ -z "$CIRCLE_TAG" ]; then
-              docker build -t slander/spike-python .
-              docker run -d --name spike-python slander/spike-python
-              docker exec spike-python wget --header='Content-type: application/json' --post-data='{"action": "parse", "input": "Hello world"}' --retry-connrefused -T 10 http://localhost:5000
-            else
-              docker build -t slander/spike-python:$CIRCLE_TAG .
-              docker run -d --name spike-python slander/spike-python:$CIRCLE_TAG
-              docker exec spike-python wget --header='Content-type: application/json' --post-data='{"action": "parse", "input": "Hello world"}' --retry-connrefused -T 10 http://localhost:5000
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push slander/spike-python:$CIRCLE_TAG
-            fi
+#      - setup_remote_docker:   # (2)
+#          docker_layer_caching: true # (3)
+#
+#      - run:
+#          name: Push image
+#          command: |
+#            cd python
+#            if [ -z "$CIRCLE_TAG" ]; then
+#              docker build -t slander/spike-python .
+#              docker run -d --name spike-python slander/spike-python
+#              docker exec spike-python wget --header='Content-type: application/json' --post-data='{"action": "parse", "input": "Hello world"}' --retry-connrefused -T 10 http://localhost:5000
+#            else
+#              docker build -t slander/spike-python:$CIRCLE_TAG .
+#              docker run -d --name spike-python slander/spike-python:$CIRCLE_TAG
+#              docker exec spike-python wget --header='Content-type: application/json' --post-data='{"action": "parse", "input": "Hello world"}' --retry-connrefused -T 10 http://localhost:5000
+#              docker login -u $DOCKER_USER -p $DOCKER_PASS
+#              docker push slander/spike-python:$CIRCLE_TAG
+#            fi
 
 
 workflows:
