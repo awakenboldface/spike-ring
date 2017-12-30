@@ -17,7 +17,7 @@ spec:
         ports:
         - containerPort: 8080
       - name: spike-python
-        image: slander/spike-python:v0.1.25
+        image: slander/spike-python:v0.1.29
         ports:
         - containerPort: 5000
       - name: spike-clojurescript
