@@ -214,21 +214,27 @@
                                       (supplement-parsed (parse text)))
                       (generate (map :lower_ (supplement-parsed (parse text))))))))
 
+(def cors-headers
+  {"Access-Control-Allow-Origin"  "*"
+   "Access-Control-Allow-Headers" "Content-Type"
+   "Access-Control-Allow-Methods" "GET,POST,OPTIONS"})
+
 (defn app
   [request]
   (if (:text (:params request))
-    {:status 200
-     :body   (pr-str {:text (get-native (:text (:params request)))})
-     }
-    {:status 200
-     :body   "hello world"}))
+    {:status  200
+     :body    (pr-str {:text (get-native (:text (:params request)))})
+     :headers cors-headers}
+    {:status  200
+     :body    "hello world"
+     :headers cors-headers}))
 
 (def start
   (partial web/run
            (-> app
                wrap-edn-params
-               (wrap-cors :access-control-allow-origin #".*"
-                          :access-control-allow-methods [:get :put :post :delete]))
+               #_(wrap-cors :access-control-allow-origin #".*"
+                            :access-control-allow-methods [:get :put :post :delete]))
            {:host "0.0.0.0"}))
 
 (def stop
