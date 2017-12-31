@@ -179,6 +179,7 @@
 
 (defn inflect-case
   [token]
+  (println token)
   ((cond (and (:start token)
               (maybe/just? (:article token))
               ;TODO check for proper adjectives
@@ -189,6 +190,7 @@
          :else identity)
     ;TODO inflect be
     (if (= (:lemma_ token) "be")
+      (:text_with_ws token)
       (if (:inflected token)
         (str (get (set/map-invert word)
                   (:lower_ token)
@@ -196,8 +198,9 @@
                     (:verb token)
                     (:noun token)))
              (:whitespace_ token))
-        (:text_with_ws token))
-      (:text_with_ws token))))
+        (if (#{"NNS" "NNPS" "VBP" "VBZ"} (:tag_ token))
+          (str (:lemma_ token) (:whitespace_ token))
+          (:text_with_ws token))))))
 
 (defn generate
   [coll]
@@ -216,6 +219,8 @@
                       (merge-inferred (infer (map :lower_ (supplement-parsed (parse text))))
                                       (supplement-parsed (parse text)))
                       (generate (map :lower_ (supplement-parsed (parse text))))))))
+
+(get-native "I has a pen")
 
 (def cors-headers
   {"Access-Control-Allow-Origin"  "*"
