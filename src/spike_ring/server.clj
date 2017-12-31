@@ -189,6 +189,7 @@
          :else identity)
     ;TODO inflect be
     (if (= (:lemma_ token) "be")
+      (:text_with_ws token)
       (if (:inflected token)
         (str (get (set/map-invert word)
                   (:lower_ token)
@@ -196,8 +197,9 @@
                     (:verb token)
                     (:noun token)))
              (:whitespace_ token))
-        (:text_with_ws token))
-      (:text_with_ws token))))
+        (if (#{"NNS" "NNPS" "VBP" "VBZ"} (:tag_ token))
+          (str (:lemma token) (:whitespace_ token))
+          (:text_with_ws token))))))
 
 (defn generate
   [coll]
