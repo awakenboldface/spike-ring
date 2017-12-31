@@ -187,13 +187,16 @@
          (:is_title token) str/capitalize
          (:upper token) str/upper-case
          :else identity)
-    (if (:inflected token)
-      (str (get (set/map-invert word)
-                (:lower_ token)
-                (if (#{"VBP" "VBZ"} (:tag_ token))
-                  (:verb token)
-                  (:noun token)))
-           (:whitespace_ token))
+    ;TODO inflect be
+    (if (= (:lemma_ token) "be")
+      (if (:inflected token)
+        (str (get (set/map-invert word)
+                  (:lower_ token)
+                  (if (#{"VBP" "VBZ"} (:tag_ token))
+                    (:verb token)
+                    (:noun token)))
+             (:whitespace_ token))
+        (:text_with_ws token))
       (:text_with_ws token))))
 
 (defn generate
