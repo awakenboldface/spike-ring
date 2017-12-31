@@ -198,7 +198,7 @@
                     (:noun token)))
              (:whitespace_ token))
         (if (#{"NNS" "NNPS" "VBP" "VBZ"} (:tag_ token))
-          (str (:lemma token) (:whitespace_ token))
+          (str (:lemma_ token) (:whitespace_ token))
           (:text_with_ws token))))))
 
 (defn generate
